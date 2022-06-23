@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+
+   $("#sub").hide();
+   $("#sub1").hide();
+   $("#div5").hide();
+   
+   $("#ttlPriceNb").val("0.00");
+   $("#ttlPriceSn").val("0.00");
+   $("#ttlPriceBg").val("0.00");
+   
+   var cartTotal = 0.00;
+    
+   $("#quantityNb").change(function(){
+      var nbVal = $("#quantityNb").val();
+      if(nbVal < 3){
+          $("#quantityNb").val("");
+          alert("min quantity should be 3");
+           $("#quantityNb").focus();
+      }
+      else if(nbVal >= 3 ){
+          var priceValNb = $("#priceNb").val();
+          $("#ttlPriceNb").val(parseFloat(nbVal * priceValNb));
+          
+          var totalNbVal = $("#ttlPriceNb").val();
+  	      var maxdiscountNb = 60;
+          if(totalNbVal == 500){
+            $("#discountNb").val("10 %");
+            $("#sub").hide();
+      		$("#ttlPriceNb").val(totalNbVal -(parseFloat((totalNbVal * 10)/100)));
+  		  }
+          else if(totalNbVal > 500){
+           $("#discountNb").val("10 %");
+           $("#sub").show();
+           $("#ttlPriceNb").val((totalNbVal - maxdiscountNb));
+          }
+      }
+      if(nbVal == ""){
+          $("#ttlPriceNb").val("");
+          $("#discountNb").val("");
+      }
+      
+      cartTotal = parseFloat($("#ttlPriceNb").val()) +                               				   parseFloat($("#ttlPriceSn").val()) +
+                  parseFloat($("#ttlPriceBg").val()) ;
+          
+       $("#ttlCart").val(cartTotal);  
+       
+       if(cartTotal > 10000){
+       		 $("#sub1").show();
+             $("#div5").show();
+             var discCartTtl = 123;
+             $("#ttlCartDisc").val(cartTotal - discCartTtl);
+       }
+      
+       
+  }); 
+  
+  $("#quantitySn").change(function(){
+      var snVal = $("#quantitySn").val();
+      if(snVal < 10){
+          $("#quantitySn").val("");
+          alert("min quantity should be 10");
+           $("#quantitySn").focus();
+      }
+      else if(snVal >= 10 ){
+          var priceValSn = $("#priceSn").val();
+          $("#ttlPriceSn").val(parseFloat(snVal * priceValSn));
+          
+          var totalSnVal = $("#ttlPriceSn").val();
+  	      var FlatdiscountSn = 100;
+          if(totalSnVal > 3000){
+            $("#discountSn").val("₹ 100");
+      		$("#ttlPriceSn").val(totalSnVal - FlatdiscountSn);
+  		  } 
+      }
+      if(snVal == ""){
+          $("#ttlPriceSn").val("");
+          $("#discountSn").val("");
+      }
+      
+      cartTotal = parseFloat($("#ttlPriceNb").val()) +                               				   parseFloat($("#ttlPriceSn").val()) +
+                  parseFloat($("#ttlPriceBg").val()) ;
+          
+       $("#ttlCart").val(cartTotal);  
+       
+       if(cartTotal > 10000){
+       		 $("#sub1").show();
+             $("#div5").show();
+             var discCartTtl = 123;
+             $("#ttlCartDisc").val(cartTotal - discCartTtl);
+       }
+      
+  }); 
+  
+  $("#quantityBg").change(function(){
+      var bgVal = $("#quantityBg").val();
+      if(bgVal > 2 ){
+          $("#quantityBg").val("");
+          $("#ttlPriceBg").val("");
+          alert("maximum number in a single purchase is limited to 2");
+           $("#quantityBg").focus();
+      }
+      else if(bgVal > 0 && bgVal <= 2){
+          var priceValBg = $("#priceBg").val();
+          $("#ttlPriceBg").val(parseFloat(bgVal * priceValBg));
+      }
+      else if(bgVal < 0 ){
+          $("#quantityBg").val("");
+          $("#ttlPriceBg").val("");
+          alert("-ve value are not allowed");
+      }
+      
+      cartTotal = parseFloat($("#ttlPriceNb").val()) +                               				   parseFloat($("#ttlPriceSn").val()) +
+                  parseFloat($("#ttlPriceBg").val()) ;
+          
+       $("#ttlCart").val(cartTotal); 
+       
+       if(cartTotal > 10000){
+       		 $("#sub1").show();
+             $("#div5").show();
+             var discCartTtl = 123;
+             $("#ttlCartDisc").val(cartTotal - discCartTtl);
+       }
+      
+      
+  }); 
+  
+});
+
+
+</script>
+<style>
+#div1{
+  padding-bottom:20px;
+}
+#div2{
+  padding-bottom:20px;
+  padding-top:20px;
+}
+
+#div3{
+  padding-bottom:20px;
+  padding-top:20px;
+}
+
+#div4{
+  padding-bottom:20px;
+  padding-top:20px;
+  display : flex;
+}
+
+#div5{
+  padding-bottom:20px;
+  padding-top:20px;
+  display : flex;
+}
+
+#ttlCart, #ttlCartDisc{
+margin-top:15px;
+margin-left:15px;
+	height:30px;
+}
+
+
+#sub1{
+	margin-top:15px;
+    margin-left:15px;
+}
+
+#sub{
+	color:red;
+}
+
+</style>
+</head>
+<body>	`
+
+<div id="div1">
+  <label>Product Name:</label>
+ <span> NoteBook</span>
+</div>
+<div> 
+  <label>Price:</label> 
+<input id="priceNb" Value="100.00" disabled/>
+  <label>Quantity:</label> 
+<input text="number" id="quantityNb" />
+  <label>Discount:</label> 
+<input id="discountNb" disabled/>
+<em id="sub"> <sub>maximum discount should be limited to 60rs</sub> </em> 
+  <label>Total Price:</label> 
+<input id="ttlPriceNb" disabled/>
+</div>
+
+<div id="div2">
+  <label>Product Name:</label>
+ <span> Sanitizer</span>
+</div>
+<div> 
+  <label>Price:</label> 
+<input id="priceSn" Value="250.00" disabled/>
+  <label>Quantity:</label> 
+<input text="number" id="quantitySn" />
+  <label>Discount:</label> 
+<input id="discountSn" disabled/>
+  <label>Total Price:</label> 
+<input id="ttlPriceSn" disabled/>
+</div>
+
+<div id="div3">
+  <label>Product Name:</label>
+ <span> Bag</span>
+</div>
+<div> 
+  <label>Price:</label> 
+<input id="priceBg" Value="1500.00" disabled/>
+  <label>Quantity:</label> 
+<input text="number" id="quantityBg" />
+  <label>Total Price:</label> 
+<input id="ttlPriceBg" disabled/>
+</div>
+
+<div id="div4">
+	<h4> <label> Total Cart Value :</label> </h4> 
+    <input id="ttlCart" disabled/>
+    <em id="sub1"> <sub>promo code: "PRIME123"</sub> </em> 
+</div>
+
+<div id="div5">
+	<h4> <label> Total Cart Value with Discount:</label> </h4> 
+    <input id="ttlCartDisc" disabled/>
+</div>
+
+</body>
+</html>
