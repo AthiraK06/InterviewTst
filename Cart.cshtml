@@ -1,0 +1,387 @@
+﻿
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h1>Cart</h1>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/Kendo/JS/kendo.all.min.js"></script>
+<script src="~/lib/Kendo/JS/jszip.min.js"></script>
+<script src="~/js/jquery.cookie.js"></script>
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>*@
+
+
+
+<style>
+    #div1 {
+        padding-bottom: 20px;
+    }
+
+    #div2 {
+        padding-bottom: 20px;
+    }
+
+    #div3 {
+        padding-bottom: 20px;
+    }
+
+    #div4 {
+        padding-bottom: 20px;
+        padding-top: 20px;
+        display: flex;
+    }
+
+    #div5 {
+        padding-bottom: 20px;
+        padding-top: 20px;
+        display: flex;
+    }
+
+    #cmb2, #cmb3 {
+        margin-top: 15px;
+    }
+
+    #ttlCart, #ttlCartDisc {
+        margin-top: 15px;
+        margin-left: 15px;
+        height: 30px;
+    }
+
+
+    #sub1 {
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+
+    #sub {
+        color: red;
+    }
+</style>
+
+
+<div id="cmb1">
+
+    <input id="cartItem" style="width: 100%;" />
+
+    <script>
+
+        $(document).ready(function () {
+            debugger
+            $.post("../Home/ItemList", {}, function (data) {
+                debugger
+                console.log("data1", data);
+                $("#cartItem").kendoComboBox({
+                    dataTextField: "Product_Name",
+                    dataValueField: "ID",
+                    dataSource: data.Table,
+                    filter: "contains",
+                    change: function (e) {
+                        debugger
+                        var value = this.value();
+                        $.post("../Home/CartDetails", { Id: value }, function (dta) {
+                            if ($("#cartItem").val() == '') {
+                                $("#pdnme1").text("");
+                                $("#priceNb").val("");
+                                $("#quantityNb").val("");
+                            }
+                            else if ($("#cartItem").val() == $("#cartItemSa").val() || $("#cartItem").val() == $("#cartItemBg").val()) {
+                                alert("Already Present in the cart");
+                                $("#cartItem").data("kendoComboBox").value("");
+                            }
+                            else {
+                                $("#pdnme1").text(dta.Table[0].Product_Name);
+                                $("#priceNb").val(dta.Table[0].Price);
+                                $("#quantityNb").val(dta.Table[0].Min_Quantity);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+</div>
+
+<div id="div1">
+    <label>Product Name:</label>
+    <span id="pdnme1"> </span>
+</div>
+
+<div>
+    <label>Price:</label>
+    <input id="priceNb"  disabled />
+    <label>Quantity:</label>
+    <input text="number" id="quantityNb"  />
+    <label>Discount:</label>
+    <input id="discountNb" disabled />
+    <em id="sub"> <sub>maximum discount should be limited to 60rs</sub> </em>
+    <label>Total Price:</label>
+    <input id="ttlPriceNb" disabled />
+</div>
+
+
+<div id="cmb2">
+
+    <input id="cartItemSa" style="width: 100%;" />
+
+    <script>
+
+        $(document).ready(function () {
+            debugger
+            $.post("../Home/ItemList", {}, function (data) {
+                debugger
+                console.log("data", data);
+
+                $("#cartItemSa").kendoComboBox({
+                    dataTextField: "Product_Name",
+                    dataValueField: "ID",
+                    dataSource: data.Table,
+                    filter: "contains",
+                    change: function (e) {
+                        var value = this.value();
+                        $.post("../Home/CartDetails", { Id: value }, function (dta) {
+                            if ($("#cartItemSa").val() == '') {
+                                $("#pdnme2").text("");
+                                $("#priceSn").val("");
+                                $("#quantitySn").val("");
+                            }
+                            else if ($("#cartItemSa").val() == $("#cartItem").val() || $("#cartItemSa").val() == $("#cartItemBg").val()) {
+                                alert("Already Present in the cart");
+                                $("#cartItemSa").data("kendoComboBox").value("");
+                            }
+                            else {
+                                $("#pdnme2").text(dta.Table[0].Product_Name);
+                                $("#priceSn").val(dta.Table[0].Price);
+                                $("#quantitySn").val(dta.Table[0].Min_Quantity);
+                            }
+                            
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+</div>
+
+<div id="div2">
+    <label>Product Name:</label>
+    <span id="pdnme2"> </span>
+</div>
+
+<div>
+    <label>Price:</label>
+    <input id="priceSn" disabled />
+    <label>Quantity:</label>
+    <input text="number" id="quantitySn"  />
+    <label>Discount:</label>
+    <input id="discountSn" disabled />
+    <label>Total Price:</label>
+    <input id="ttlPriceSn" disabled />
+</div>
+
+<div id="cmb3">
+
+    <input id="cartItemBg" style="width: 100%;" />
+
+    <script>
+
+        $(document).ready(function () {
+            
+            $.post("../Home/ItemList", {}, function (data) {
+                $("#cartItemBg").kendoComboBox({
+                    dataTextField: "Product_Name",
+                    dataValueField: "ID",
+                    dataSource: data.Table,
+                    filter: "contains",
+                    change: function (e) {
+                        var value = this.value();
+                        $.post("../Home/CartDetails", { Id: value }, function (dta) {
+                            if ($("#cartItemBg").val() == '' ) {
+                                $("#pdnme3").text("");
+                                $("#priceBg").val("");
+                                $("#quantityBg").val("");
+                            }
+                            else if ($("#cartItemBg").val() == $("#cartItem").val() || $("#cartItemSa").val() == $("#cartItemBg").val()) {
+                                alert("Already Present in the cart");
+                                $("#cartItemBg").data("kendoComboBox").value("");
+                            }
+                            else {
+                                $("#pdnme3").text(dta.Table[0].Product_Name);
+                                $("#priceBg").val(dta.Table[0].Price);
+                                $("#quantityBg").val(dta.Table[0].Min_Quantity);
+                            }
+                            
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+</div>
+
+<div id="div3">
+    <label>Product Name:</label>
+    <span id="pdnme3"> </span>
+</div>
+
+<div>
+    <label>Price:</label>
+    <input id="priceBg"  disabled />
+    <label>Quantity:</label>
+    <input text="number" id="quantityBg" />
+    <label>Total Price:</label>
+    <input id="ttlPriceBg" disabled />
+</div>
+
+<div id="div4">
+    <h4> <label> Total Cart Value :</label> </h4>
+    <input id="ttlCart" disabled />
+    <em id="sub1"> <sub>promo code: "PRIME123"</sub> </em>
+</div>
+
+<div id="div5">
+    <h4> <label> Total Cart Value with Discount:</label> </h4>
+    <input id="ttlCartDisc" disabled />
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#sub").hide();
+        $("#sub1").hide();
+        $("#div5").hide();
+
+        $("#ttlPriceNb").val("0.00");
+        $("#ttlPriceSn").val("0.00");
+        $("#ttlPriceBg").val("0.00");
+
+        var cartTotal = 0.00;
+
+        $("#quantityNb").change(function () {
+            var nbVal = $("#quantityNb").val();
+            if (nbVal < 3) {
+                $("#quantityNb").val("");
+                alert("min quantity should be 3");
+                $("#quantityNb").focus();
+            }
+            else if (nbVal >= 3) {
+                var priceValNb = $("#priceNb").val();
+                $("#ttlPriceNb").val(parseFloat(nbVal * priceValNb));
+
+                var totalNbVal = $("#ttlPriceNb").val();
+                var maxdiscountNb = 60;
+                if (totalNbVal == 500) {
+                    $("#discountNb").val("10 %");
+                    $("#sub").hide();
+                    $("#ttlPriceNb").val(totalNbVal - (parseFloat((totalNbVal * 10) / 100)));
+                }
+                else if (totalNbVal > 500) {
+                    $("#discountNb").val("10 %");
+                    $("#sub").show();
+                    $("#ttlPriceNb").val((totalNbVal - maxdiscountNb));
+                }
+            }
+            if (nbVal == "") {
+                $("#ttlPriceNb").val("");
+                $("#discountNb").val("");
+            }
+
+            cartTotal = parseFloat($("#ttlPriceNb").val()) + parseFloat($("#ttlPriceSn").val()) +
+                parseFloat($("#ttlPriceBg").val());
+
+            $("#ttlCart").val(cartTotal);
+
+            if (cartTotal > 10000) {
+                $("#sub1").show();
+                $("#div5").show();
+                var discCartTtl = 123;
+                $("#ttlCartDisc").val(cartTotal - discCartTtl);
+            }
+
+
+        });
+
+        $("#quantitySn").change(function () {
+            var snVal = $("#quantitySn").val();
+            if (snVal < 10) {
+                $("#quantitySn").val("");
+                alert("min quantity should be 10");
+                $("#quantitySn").focus();
+            }
+            else if (snVal >= 10) {
+                var priceValSn = $("#priceSn").val();
+                $("#ttlPriceSn").val(parseFloat(snVal * priceValSn));
+
+                var totalSnVal = $("#ttlPriceSn").val();
+                var FlatdiscountSn = 100;
+                if (totalSnVal > 3000) {
+                    $("#discountSn").val("₹ 100");
+                    $("#ttlPriceSn").val(totalSnVal - FlatdiscountSn);
+                }
+            }
+            if (snVal == "") {
+                $("#ttlPriceSn").val("");
+                $("#discountSn").val("");
+            }
+
+            cartTotal = parseFloat($("#ttlPriceNb").val()) + parseFloat($("#ttlPriceSn").val()) +
+                parseFloat($("#ttlPriceBg").val());
+
+            $("#ttlCart").val(cartTotal);
+
+            if (cartTotal > 10000) {
+                $("#sub1").show();
+                $("#div5").show();
+                var discCartTtl = 123;
+                $("#ttlCartDisc").val(cartTotal - discCartTtl);
+            }
+
+        });
+
+        $("#quantityBg").change(function () {
+            var bgVal = $("#quantityBg").val();
+            if (bgVal > 2) {
+                $("#quantityBg").val("");
+                $("#ttlPriceBg").val("");
+                alert("maximum number in a single purchase is limited to 2");
+                $("#quantityBg").focus();
+            }
+            else if (bgVal > 0 && bgVal <= 2) {
+                var priceValBg = $("#priceBg").val();
+                $("#ttlPriceBg").val(parseFloat(bgVal * priceValBg));
+            }
+            else if (bgVal < 0) {
+                $("#quantityBg").val("");
+                $("#ttlPriceBg").val("");
+                alert("-ve value are not allowed");
+            }
+
+            cartTotal = parseFloat($("#ttlPriceNb").val()) + parseFloat($("#ttlPriceSn").val()) +
+                parseFloat($("#ttlPriceBg").val());
+
+            $("#ttlCart").val(cartTotal);
+
+            if (cartTotal > 10000) {
+                $("#sub1").show();
+                $("#div5").show();
+                var discCartTtl = 123;
+                $("#ttlCartDisc").val(cartTotal - discCartTtl);
+            }
+
+
+        });
+
+    });
+
+
+</script>
+
